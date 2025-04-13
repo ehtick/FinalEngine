@@ -24,6 +24,8 @@ public sealed class SceneViewPaneViewModel : PaneViewModelBase, ISceneViewPaneVi
 
     private ICommand? renderCommand;
 
+    private IRelayCommand<Rectangle>? updateViewCommand;
+
     public SceneViewPaneViewModel(
         ILogger<SceneViewPaneViewModel> logger,
         IRenderDevice renderDevice,
@@ -45,6 +47,11 @@ public sealed class SceneViewPaneViewModel : PaneViewModelBase, ISceneViewPaneVi
         get { return this.renderCommand ??= new RelayCommand(this.Render); }
     }
 
+    public IRelayCommand<Rectangle> UpdateViewCommand
+    {
+        get { return this.updateViewCommand ??= new RelayCommand<Rectangle>(this.UpdateView); }
+    }
+
     private void Render()
     {
         if (!isInitialized)
@@ -56,5 +63,10 @@ public sealed class SceneViewPaneViewModel : PaneViewModelBase, ISceneViewPaneVi
 
         this.renderDevice.Clear(Color.Black);
         this.sceneManager.ActiveScene.Render();
+    }
+
+    private void UpdateView(Rectangle viewport)
+    {
+        this.renderDevice.Rasterizer.SetViewport(viewport);
     }
 }

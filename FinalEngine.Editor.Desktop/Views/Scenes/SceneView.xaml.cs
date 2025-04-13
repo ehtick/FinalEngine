@@ -4,38 +4,33 @@
 
 namespace FinalEngine.Editor.Desktop.Views.Scenes;
 
+using System.Drawing;
+using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using FinalEngine.Editor.Desktop.Framework.Input;
+using FinalEngine.Editor.ViewModels.Scenes;
 using OpenTK.Windowing.Common;
 using OpenTK.Wpf;
 
 public partial class SceneView : UserControl
 {
-    private static bool isEventsRegistered;
+    static SceneView()
+    {
+        FocusableProperty.OverrideMetadata(typeof(GLWpfControl), new FrameworkPropertyMetadata(true));
+    }
 
     public SceneView()
     {
         this.InitializeComponent();
 
-        if (!isEventsRegistered)
-        {
-            this.glWpfControl.RegisterToEventsDirectly = false;
-            this.glWpfControl.CanInvokeOnHandledEvents = false;
-            isEventsRegistered = true;
-        }
-
-        this.glWpfControl.Focusable = true;
-
-        this.glWpfControl.MouseDown += this.GlWpfControl_MouseDown;
-        this.glWpfControl.MouseEnter += this.GlWpfControl_MouseEnter;
-        this.glWpfControl.MouseLeave += this.GlWpfControl_MouseLeave;
+        this.glWpfControl.CanInvokeOnHandledEvents = false;
+        this.glWpfControl.RegisterToEventsDirectly = false;
 
         this.glWpfControl.Start(new GLWpfControlSettings()
         {
             MajorVersion = 4,
             MinorVersion = 6,
-            GraphicsProfile = ContextProfile.Compatability,
+            GraphicsProfile = ContextProfile.Core,
             GraphicsContextFlags = ContextFlags.ForwardCompatible,
             RenderContinuously = true,
             UseDeviceDpi = true,
@@ -49,20 +44,14 @@ public partial class SceneView : UserControl
 
     internal static WPFMouseDevice MouseDevice { get; } = new WPFMouseDevice();
 
-    private void GlWpfControl_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void GlWpfControl_SizeChanged(object sender, SizeChangedEventArgs e)
     {
-        this.glWpfControl.Focus();
-    }
+        if (this.DataContext is SceneViewPaneViewModel vm)
+        {
+            int w = (int)e.NewSize.Width;
+            int h = (int)e.NewSize.Height;
 
-    private void GlWpfControl_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-    {
-        this.glWpfControl.Focus();
-    }
-
-    private void GlWpfControl_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-    {
-        var scope = FocusManager.GetFocusScope(this.glWpfControl);
-        FocusManager.SetFocusedElement(scope, null);
-        Keyboard.ClearFocus();
+            vm.UpdateViewCommand.Execute(new Rectangle(0, 0, w, h));
+        }
     }
 }

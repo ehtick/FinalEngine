@@ -23,7 +23,7 @@ public sealed class Game : GameContainerBase
         entity.AddComponent<TransformComponent>();
         entity.AddComponent(new SpriteComponent()
         {
-            Color = Color.RebeccaPurple,
+            Color = Color.White,
             Origin = Vector2.Zero,
             Texture = this.ResourceManager.LoadResource<ITexture2D>("Resources\\Textures\\default_diffuse.png"),
         });

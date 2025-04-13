@@ -4,9 +4,11 @@
 
 namespace FinalEngine.Rendering.Components;
 
+using System.ComponentModel;
 using System.Numerics;
 using FinalEngine.ECS;
 
+[Category("Rendering")]
 public class TransformComponent : IEntityComponent
 {
     public TransformComponent()

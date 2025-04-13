@@ -14,13 +14,11 @@ internal sealed class OpenGLRenderContext : IRenderContext
 {
     private readonly IGraphicsContext context;
 
-    private readonly IOpenGLInvoker invoker;
-
     public OpenGLRenderContext(IOpenGLInvoker invoker, IBindingsContext bindings, IGraphicsContext context)
     {
         ArgumentNullException.ThrowIfNull(bindings, nameof(bindings));
+        ArgumentNullException.ThrowIfNull(invoker, nameof(invoker));
 
-        this.invoker = invoker ?? throw new ArgumentNullException(nameof(invoker));
         this.context = context ?? throw new ArgumentNullException(nameof(context));
 
         context.MakeCurrent();
