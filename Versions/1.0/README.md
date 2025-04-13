@@ -8,7 +8,7 @@
 - [x] Game Loop
 - [x] Keyboard Handling
 - [x] Mouse Handling
-- [x] Game Pad Handling
+- [ ] Game Pad Handling
 
 ---
 
