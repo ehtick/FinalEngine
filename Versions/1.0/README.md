@@ -10,15 +10,21 @@
 - [x] Mouse Handling
 - [x] Game Pad Handling
 
+---
+
 ### Scenes and Entities
 
 - [ ] Scene Manager
 - [x] ECS Framework
 - [x] Resource Manager
 
+---
+
 ### Audio
 
 - [x] Playback
+
+---
 
 ## Rendering
 
@@ -27,16 +33,22 @@
 - [x] Pipeline
   - [x] Forward Rendering
 
+---
+
 ### Geometry and Models
 
 - [x] Mesh Rendering
 - [x] Model Loading (using Assimp)
 - [x] 2D Sprite Batching
 
+---
+
 ### Camera and View Optimization
 
 - [x] Camera System
 - [ ] View Frustum Culling
+
+---
 
 ### Material and Shading
 
@@ -46,6 +58,8 @@
   - [x] Normal Mapping
   - [x] Emissive Mapping
   - [ ] Parallax Mapping
+
+---
 
 ### Lighting and Shadows
 
@@ -57,10 +71,14 @@
   - [x] Spot
 - [x] Global Illumination (Ambient Lighting)
 
+---
+
 ### Visual Effects
 
 - [x] Skyboxes
 - [ ] Blending
+
+---
 
 ### Post Processing
 
@@ -72,6 +90,8 @@
     - [ ] Linear
     - [ ] Exponential
     - [ ] Exponential Squared
+
+---
 
 ## Editor
 
@@ -108,6 +128,8 @@
 - [x] Add new entity
 - [x] Delete entity
 - [ ] Rename entity
+
+---
 
 ### Components
 
