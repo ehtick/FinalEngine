@@ -84,7 +84,7 @@ public abstract class GameContainerBase : IDisposable
     public virtual void Render(float delta)
     {
         this.RenderDevice.Clear(Color.CornflowerBlue);
-        this.World.ProcessAll(GameLoopType.Render);
+        this.World.ProcessAll("Render");
     }
 
     public virtual void UnloadContent()
@@ -93,7 +93,7 @@ public abstract class GameContainerBase : IDisposable
 
     public virtual void Update(float delta)
     {
-        this.World.ProcessAll(GameLoopType.Update);
+        this.World.ProcessAll("Update");
     }
 
     protected virtual void Dispose(bool disposing)

@@ -4,61 +4,93 @@
 
 namespace FinalEngine.Example;
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Numerics;
 using FinalEngine.ECS;
-using FinalEngine.Input.Controllers;
+using FinalEngine.ECS.Components;
+using FinalEngine.Physics.Components;
+using FinalEngine.Physics.Systems;
 using FinalEngine.Rendering.Components;
+using FinalEngine.Rendering.Geometry;
 using FinalEngine.Rendering.Systems;
-using FinalEngine.Rendering.Textures;
 using FinalEngine.Runtime;
-
-public class GameControllerInputEntitySystem : EntitySystemBase
-{
-    private readonly IGameController controller;
-
-    public GameControllerInputEntitySystem(IGameController controller)
-    {
-        this.controller = controller ?? throw new ArgumentNullException(nameof(controller));
-    }
-
-    protected override bool IsMatch([NotNull] IReadOnlyEntity entity)
-    {
-        return entity.ContainsComponent<TransformComponent>();
-    }
-
-    protected override void Process([NotNull] IEnumerable<Entity> entities)
-    {
-        foreach (var entity in entities)
-        {
-            var transform = entity.GetComponent<TransformComponent>();
-            transform.Translate(movement, 1);
-        }
-    }
-}
 
 public sealed class Game : GameContainerBase
 {
     public override void Initialize()
     {
+        this.World.AddSystem<CameraUpdateEntitySystem>();
+        this.World.AddSystem<MeshRenderEntitySystem>();
+        this.World.AddSystem<LightRenderEntitySystem>();
+        this.World.AddSystem<PerspectiveRenderEntitySystem>();
         this.World.AddSystem<SpriteRenderEntitySystem>();
-        this.World.AddSystem<GameControllerInputEntitySystem>();
+        this.World.AddSystem<SpinUpdateEntitySystem>();
+
+        var camera = new Entity();
+
+        camera.AddComponent<TransformComponent>();
+        camera.AddComponent<PerspectiveComponent>();
+        camera.AddComponent(new CameraComponent()
+        {
+            Viewport = this.Window.ClientBounds,
+        });
+
+        camera.AddComponent(new VelocityComponent()
+        {
+            Speed = 4,
+        });
+
+        this.World.AddEntity(camera);
+
+        var cube = new Entity();
+        cube.AddComponent(new TransformComponent()
+        {
+            Position = new Vector3(0, 200, 0),
+            Scale = new Vector3(80, 80, 80),
+        });
+        cube.AddComponent<MeshComponent>();
+        cube.AddComponent<VelocityComponent>();
+        cube.AddComponent<SpinComponent>();
+
+        this.World.AddEntity(cube);
+
+        this.Create(this.ResourceManager.LoadResource<Rendering.Geometry.Model>("Resources\\Models\\Sponza\\sponza.obj"));
+
+        var light = new Entity();
+
+        light.AddComponent(new TransformComponent()
+        {
+            Position = new Vector3(2, 40, 0),
+        });
+
+        light.AddComponent(new LightComponent()
+        {
+            Intensity = 80,
+        });
+
+        this.World.AddEntity(light);
+
+        base.Initialize();
+    }
+
+    private void Create(Model model, bool rotate = false)
+    {
+        var renderModel = model.RenderModel;
 
         var entity = new Entity();
 
-        entity.AddComponent<TransformComponent>();
-        entity.AddComponent(new SpriteComponent()
+        entity.AddComponent(new MeshComponent()
         {
-            Color = Color.White,
-            Origin = Vector2.Zero,
-            Texture = this.ResourceManager.LoadResource<ITexture2D>("Resources\\Textures\\default_diffuse.png"),
+            Mesh = renderModel.Mesh,
+            Material = renderModel.Material,
         });
+
+        entity.AddComponent(renderModel.Transform);
 
         this.World.AddEntity(entity);
 
-        base.Initialize();
+        foreach (var child in model.Children)
+        {
+            this.Create(child);
+        }
     }
 }

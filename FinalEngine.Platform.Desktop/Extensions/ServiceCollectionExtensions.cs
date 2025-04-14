@@ -36,7 +36,7 @@ public static class ServiceCollectionExtensions
                 WindowBorder = WindowBorder.Fixed,
                 WindowState = WindowState.Normal,
 
-                Size = new Vector2i(1280, 720),
+                ClientSize = new Vector2i(1280, 720),
                 Title = "Game",
 
                 StartVisible = true,

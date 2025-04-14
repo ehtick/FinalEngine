@@ -12,9 +12,10 @@ using System.Reflection;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using FinalEngine.ECS;
-using FinalEngine.ECS.Components.Core;
+using FinalEngine.ECS.Components;
 using FinalEngine.Editor.ViewModels.Messages.Entities;
 using FinalEngine.Editor.ViewModels.Services.Entities;
+using FinalEngine.Physics.Components;
 using FinalEngine.Rendering.Components;
 
 public sealed class EntityInspectorViewModel : ObservableObject, IEntityInspectorViewModel
@@ -98,6 +99,7 @@ public sealed class EntityInspectorViewModel : ObservableObject, IEntityInspecto
         this.categorizedComponentTypes.Clear();
 
         this.InitializeComponentTypesFromAssembly<TagComponent>();
-        this.InitializeComponentTypesFromAssembly<TransformComponent>();
+        this.InitializeComponentTypesFromAssembly<MeshComponent>();
+        this.InitializeComponentTypesFromAssembly<VelocityComponent>();
     }
 }

@@ -10,10 +10,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using FinalEngine.Audio.OpenAL.Extensions;
 using FinalEngine.ECS.Extensions;
 using FinalEngine.Editor.Common.Extensions;
-using FinalEngine.Editor.Common.Models.Scenes;
-using FinalEngine.Editor.Common.Services.Application;
-using FinalEngine.Editor.Common.Services.Environment;
-using FinalEngine.Editor.Common.Services.Scenes;
 using FinalEngine.Editor.Desktop.Extensions;
 using FinalEngine.Editor.Desktop.Services.Actions;
 using FinalEngine.Editor.Desktop.Services.Layout;
@@ -33,6 +29,7 @@ using FinalEngine.Editor.ViewModels.Services.Entities;
 using FinalEngine.Editor.ViewModels.Services.Interactions;
 using FinalEngine.Editor.ViewModels.Services.Layout;
 using FinalEngine.Input.Extensions;
+using FinalEngine.Physics.Extensions;
 using FinalEngine.Rendering.Extensions;
 using FinalEngine.Rendering.OpenGL.Extensions;
 using FinalEngine.Resources.Extensions;
@@ -86,15 +83,12 @@ public partial class App : Application
         services.AddOpenGL();
         services.AddOpenAL();
         services.AddInput();
+        services.AddPhysics();
         services.AddRendering();
         services.AddResourceManager();
         services.AddEditorPlatform();
 
-        services.AddTransient<IScene, Scene>();
-
-        services.AddSingleton<IApplicationContext, ApplicationContext>();
-        services.AddSingleton<IEnvironmentContext, EnvironmentContext>();
-        services.AddSingleton<ISceneManager, SceneManager>();
+        services.AddCommon();
 
         services.AddFactory<IProjectExplorerToolViewModel, ProjectExplorerToolViewModel>();
         services.AddFactory<ISceneHierarchyToolViewModel, SceneHierarchyToolViewModel>();
