@@ -7,7 +7,6 @@ namespace FinalEngine.Rendering;
 using System;
 using System.Drawing;
 using System.IO.Abstractions;
-using System.Numerics;
 using FinalEngine.Rendering.Cameras;
 using FinalEngine.Rendering.Renderers.Effects;
 using FinalEngine.Rendering.Renderers.Lighting;
@@ -86,11 +85,6 @@ internal sealed class RenderingEngine : IRenderingEngine
         }
 
         this.renderCoordinator.ClearQueues();
-    }
-
-    public void SetAmbientLight(Vector3 color, float strength)
-    {
-        this.lightRenderer.SetAmbientLight(color, strength);
     }
 
     public void SetSkybox(ITextureCube texture)

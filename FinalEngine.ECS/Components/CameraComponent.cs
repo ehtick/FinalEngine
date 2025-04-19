@@ -14,5 +14,7 @@ public class CameraComponent : IEntityComponent
 
     public bool IsLocked { get; set; }
 
-    public Rectangle Viewport { get; set; }
+    public bool IsViewportDynamic { get; set; } = true;
+
+    public Rectangle Viewport { get; set; } = new Rectangle(0, 0, 1280, 720);
 }

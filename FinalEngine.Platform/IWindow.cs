@@ -6,9 +6,12 @@ namespace FinalEngine.Platform;
 
 using System;
 using System.Drawing;
+using FinalEngine.Platform.Events;
 
 public interface IWindow : IDisposable
 {
+    event EventHandler<SizeChangedEventArgs>? SizeChanged;
+
     Rectangle ClientBounds { get; }
 
     Size ClientSize { get; }

@@ -8,7 +8,7 @@ using FinalEngine.Editor.ViewModels.Dialogs.Layout;
 using FinalEngine.Editor.ViewModels.Services.Interactions;
 using MahApps.Metro.Controls;
 
-public partial class ManageWindowLayoutsView : MetroWindow, IViewable<IManageWindowLayoutsViewModel>
+public partial class ManageWindowLayoutsView : MetroWindow, IDialogable<IManageWindowLayoutsViewModel>
 {
     public ManageWindowLayoutsView()
     {

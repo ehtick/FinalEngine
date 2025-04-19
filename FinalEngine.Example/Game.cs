@@ -69,6 +69,8 @@ public sealed class Game : GameContainerBase
 
         this.World.AddEntity(light);
 
+        this.Window.SizeChanged += this.Window_SizeChanged;
+
         base.Initialize();
     }
 
@@ -92,5 +94,10 @@ public sealed class Game : GameContainerBase
         {
             this.Create(child);
         }
+    }
+
+    private void Window_SizeChanged(object? sender, Platform.Events.SizeChangedEventArgs e)
+    {
+        this.RenderDevice.Rasterizer.SetViewport(e.Bounds);
     }
 }

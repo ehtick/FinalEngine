@@ -9,7 +9,25 @@ using FinalEngine.Editor.ViewModels.Docking;
 
 public interface IMainViewModel
 {
+    ICommand CreateConeCommand { get; }
+
+    ICommand CreateCubeCommand { get; }
+
+    ICommand CreateCylinderCommand { get; }
+
+    ICommand CreateDirectionalLightCommand { get; }
+
     ICommand CreateEntityCommand { get; }
+
+    ICommand CreatePlaneCommand { get; }
+
+    ICommand CreatePointLightCommand { get; }
+
+    ICommand CreateSphereCommand { get; }
+
+    ICommand CreateSpotLightCommand { get; }
+
+    ICommand CreateTorusCommand { get; }
 
     IDockViewModel DockViewModel { get; }
 
@@ -20,6 +38,8 @@ public interface IMainViewModel
     ICommand ResetWindowLayoutCommand { get; }
 
     ICommand SaveWindowLayoutCommand { get; }
+
+    ICommand ShowRenderingSettingsCommand { get; }
 
     string Title { get; }
 

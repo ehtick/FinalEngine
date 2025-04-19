@@ -8,7 +8,11 @@ using System;
 using FinalEngine.Rendering.Cameras;
 using FinalEngine.Rendering.Effects;
 
-internal interface IPostRenderer : IRenderQueue<IRenderEffect>
+public interface IPostRenderer : IRenderQueue<IRenderEffect>
 {
+    bool Enabled { get; set; }
+
+    bool UsePowerOfTwo { get; set; }
+
     void Render(Camera camera, Action renderScene);
 }

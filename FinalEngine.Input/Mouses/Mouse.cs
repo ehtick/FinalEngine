@@ -51,6 +51,12 @@ internal sealed class Mouse : IMouse, IDisposable
         }
     }
 
+    public bool Visible
+    {
+        get { return this.device.ShowCursor; }
+        set { this.device.ShowCursor = value; }
+    }
+
     public double WheelOffset { get; private set; }
 
     public void Dispose()
@@ -88,7 +94,7 @@ internal sealed class Mouse : IMouse, IDisposable
 
     public void Update()
     {
-        this.buttonsDownLast = new List<MouseButton>(this.buttonsDown);
+        this.buttonsDownLast = [.. this.buttonsDown];
     }
 
     private void Device_ButtonDown(object? sender, MouseButtonEventArgs e)

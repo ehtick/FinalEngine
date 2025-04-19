@@ -7,7 +7,6 @@ namespace FinalEngine.Editor.Desktop.Views.Scenes;
 using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using FinalEngine.Editor.Desktop.Framework.Input;
 using FinalEngine.Editor.ViewModels.Scenes;
 using FinalEngine.Utilities;
@@ -32,12 +31,9 @@ public partial class SceneView : UserControl
 
         this.glWpfControl.Focusable = true;
 
+        this.glWpfControl.MouseDown += this.GlWpfControl_MouseDown;
         this.glWpfControl.SizeChanged += this.GlWpfControl_SizeChanged;
         this.glWpfControl.Render += this.GlWpfControl_Render;
-
-        this.glWpfControl.MouseDown += this.GlWpfControl_MouseDown;
-        this.glWpfControl.MouseEnter += this.GlWpfControl_MouseEnter;
-        this.glWpfControl.MouseLeave += this.GlWpfControl_MouseLeave;
 
         this.glWpfControl.Start(new GLWpfControlSettings()
         {
@@ -64,18 +60,6 @@ public partial class SceneView : UserControl
         this.glWpfControl.Focus();
     }
 
-    private void GlWpfControl_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
-    {
-        this.glWpfControl.Focus();
-    }
-
-    private void GlWpfControl_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
-    {
-        var scope = FocusManager.GetFocusScope(this.glWpfControl);
-        FocusManager.SetFocusedElement(scope, null);
-        Keyboard.ClearFocus();
-    }
-
     private void GlWpfControl_Render(System.TimeSpan obj)
     {
         if (!this.gameTime.CanProcessNextFrame())
@@ -96,12 +80,12 @@ public partial class SceneView : UserControl
             return;
         }
 
-        if (this.DataContext is ISceneViewPaneViewModel vm)
+        if (this.DataContext is ISceneViewPaneViewModel viewModel)
         {
             int w = (int)e.NewSize.Width;
             int h = (int)e.NewSize.Height;
 
-            vm.UpdateViewCommand.Execute(new Rectangle(0, 0, w, h));
+            viewModel.ResizeCommand.Execute(new Rectangle(0, 0, w, h));
         }
     }
 }

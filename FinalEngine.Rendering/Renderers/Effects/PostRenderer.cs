@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
+using FinalEngine.Maths;
 using FinalEngine.Rendering.Buffers;
 using FinalEngine.Rendering.Cameras;
 using FinalEngine.Rendering.Effects;
@@ -71,8 +72,12 @@ internal sealed class PostRenderer : IPostRenderer, IDisposable
 
     public bool CanRender
     {
-        get { return this.renderEffects.Count > 0; }
+        get { return this.renderEffects.Count > 0 && this.Enabled; }
     }
+
+    public bool Enabled { get; set; } = false;
+
+    public bool UsePowerOfTwo { get; set; } = false;
 
     private IShaderProgram ShaderProgram
     {
@@ -104,10 +109,22 @@ internal sealed class PostRenderer : IPostRenderer, IDisposable
         ArgumentNullException.ThrowIfNull(camera, nameof(camera));
         ArgumentNullException.ThrowIfNull(renderScene, nameof(renderScene));
 
-        this.CreateFrameBuffer(camera.Viewport.Size);
+        if (!this.Enabled)
+        {
+            return;
+        }
+
+        var targetSize = camera.Viewport.Size;
+
+        if (this.UsePowerOfTwo)
+        {
+            targetSize = MathHelper.GetNearestPowerOfTwo(targetSize);
+        }
+
+        this.CreateFrameBuffer(targetSize);
 
         this.renderDevice.Pipeline.SetFrameBuffer(this.frameBuffer);
-        this.renderDevice.Rasterizer.SetViewport(camera.Viewport);
+        this.renderDevice.Rasterizer.SetViewport(new Rectangle(0, 0, targetSize.Width, targetSize.Height));
         this.renderDevice.Clear(Color.Black);
 
         renderScene();

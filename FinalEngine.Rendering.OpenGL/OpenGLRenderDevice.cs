@@ -97,6 +97,7 @@ internal sealed class OpenGLRenderDevice : IRenderDevice
             { SizedFormat.Rg8, SizedInternalFormat.Rg8 },
             { SizedFormat.Rgb8, All.Rgb8 },
             { SizedFormat.Rgba8, SizedInternalFormat.Rgba8 },
+            { SizedFormat.Rgba16, SizedInternalFormat.Rgba16 },
             { SizedFormat.Rgba16F, SizedInternalFormat.Rgba16f },
             { SizedFormat.Depth16, SizedInternalFormat.DepthComponent16 },
             { SizedFormat.Depth24, SizedInternalFormat.DepthComponent24 },

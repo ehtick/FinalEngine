@@ -53,9 +53,25 @@
 
                 <!-- SCENE -->
                 <MenuItem Header="_Scene">
-                    <MenuItem Header="Create _Entity" InputGestureText="Ctrl+Shift+E" Command="{Binding CreateEntityCommand}" CommandParameter="Empty" />
-                    <MenuItem Header="Create _Cube" Command="{Binding CreateEntityCommand}" CommandParameter="Cube" />
-                    <MenuItem Header="Create _Light" Command="{Binding CreateEntityCommand}" CommandParameter="Light" />
+                    <MenuItem Header="Create _Empty" InputGestureText="Ctrl+Shift+E" Command="{Binding CreateEntityCommand}" />
+                    <MenuItem Header="3_D Entities...">
+                        <MenuItem Header="_Plane" Command="{Binding CreatePlaneCommand}" />
+                        <MenuItem Header="_Cube" Command="{Binding CreateCubeCommand}" />
+                        <MenuItem Header="_Sphere" Command="{Binding CreateSphereCommand}" />
+                        <MenuItem Header="C_ylinder" Command="{Binding CreateCylinderCommand}" />
+                        <MenuItem Header="C_one" Command="{Binding CreateConeCommand}" />
+                        <MenuItem Header="_Torus" Command="{Binding CreateTorusCommand}" />
+                    </MenuItem>
+                    <MenuItem Header="_Lights...">
+                        <MenuItem Header="_Directional" Command="{Binding CreateDirectionalLightCommand}" />
+                        <MenuItem Header="_Point" Command="{Binding CreatePointLightCommand}" />
+                        <MenuItem Header="_Spot" Command="{Binding CreateSpotLightCommand}" />
+                    </MenuItem>
+                </MenuItem>
+
+                <!-- RENDERING -->
+                <MenuItem Header="_Rendering">
+                    <MenuItem Header="_Settings" Command="{Binding ShowRenderingSettingsCommand}" />
                 </MenuItem>
 
                 <!-- WINDOW -->

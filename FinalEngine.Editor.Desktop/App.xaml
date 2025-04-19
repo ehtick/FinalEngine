@@ -20,6 +20,7 @@
                 <ResourceDictionary Source="Styles/Controls/TransparentListBoxStyle.xaml" />
                 <ResourceDictionary Source="Styles/Controls/TransparentListBoxItemStyle.xaml" />
                 <ResourceDictionary Source="Styles/Controls/IconButtonStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/ColorPicker;component/Styles/DefaultColorPickerStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

@@ -48,7 +48,7 @@ public sealed class SceneHierarchyToolViewModel : ToolViewModelBase, ISceneHiera
 
     public IReadOnlyCollection<Entity> Entities
     {
-        get { return this.sceneManager.ActiveScene.Entities; }
+        get { return this.sceneManager.Scene.Entities; }
     }
 
     public Entity? SelectedEntity
@@ -82,7 +82,7 @@ public sealed class SceneHierarchyToolViewModel : ToolViewModelBase, ISceneHiera
             return;
         }
 
-        this.sceneManager.ActiveScene.RemoveEntity(this.SelectedEntity);
+        this.sceneManager.Scene.RemoveEntity(this.SelectedEntity);
         this.messenger.Send(new EntityDeletedMessage());
     }
 }

@@ -6,13 +6,15 @@ namespace FinalEngine.Editor.Common.Services.Scenes;
 
 using System;
 using System.Drawing;
+using System.Numerics;
 using FinalEngine.ECS;
-using FinalEngine.Editor.Common.Blackboard;
-using FinalEngine.Editor.Common.Services.Factories.Entities.Cameras;
-using FinalEngine.Editor.Common.Systems;
+using FinalEngine.ECS.Components;
+using FinalEngine.Editor.Common.Components;
 using FinalEngine.Input;
+using FinalEngine.Physics.Components;
 using FinalEngine.Physics.Systems;
 using FinalEngine.Rendering;
+using FinalEngine.Rendering.Components;
 using FinalEngine.Rendering.Systems;
 
 internal sealed class SceneManager : ISceneManager
@@ -23,48 +25,101 @@ internal sealed class SceneManager : ISceneManager
 
     private readonly IRenderPipeline renderPipeline;
 
-    public SceneManager(IEntityWorld scene, IInputDriver inputDriver, IRenderDevice renderDevice, IRenderPipeline renderPipeline)
+    public SceneManager(IScene scene, IInputDriver inputDriver, IRenderDevice renderDevice, IRenderPipeline renderPipeline)
     {
-        this.ActiveScene = scene ?? throw new ArgumentNullException(nameof(scene));
+        this.Scene = scene ?? throw new ArgumentNullException(nameof(scene));
         this.inputDriver = inputDriver ?? throw new ArgumentNullException(nameof(inputDriver));
         this.renderDevice = renderDevice ?? throw new ArgumentNullException(nameof(renderDevice));
         this.renderPipeline = renderPipeline ?? throw new ArgumentNullException(nameof(renderPipeline));
     }
 
-    public IEntityWorld ActiveScene { get; }
+    public IScene Scene { get; }
 
     public void Initialize()
     {
         this.renderPipeline.Initialize();
 
-        this.ActiveScene.AddResource(new ViewportBlackboardResource());
+        this.Scene.AddSystem<CameraUpdateEntitySystem>();
+        this.Scene.AddSystem<SpinUpdateEntitySystem>();
 
-        this.ActiveScene.AddSystem<ViewportUpdateEntitySystem>();
-        this.ActiveScene.AddSystem<CameraUpdateEntitySystem>();
-        this.ActiveScene.AddSystem<SpinUpdateEntitySystem>();
+        this.Scene.AddSystem<MeshRenderEntitySystem>();
+        this.Scene.AddSystem<LightRenderEntitySystem>();
+        this.Scene.AddSystem<PerspectiveRenderEntitySystem>();
+        this.Scene.AddSystem<SpriteRenderEntitySystem>();
 
-        this.ActiveScene.AddSystem<MeshRenderEntitySystem>();
-        this.ActiveScene.AddSystem<LightRenderEntitySystem>();
-        this.ActiveScene.AddSystem<PerspectiveRenderEntitySystem>();
-        this.ActiveScene.AddSystem<SpriteRenderEntitySystem>();
+        var camera = new Entity();
 
-        this.ActiveScene.AddEntityFromFactory<EditorCameraEntityFactory>();
+        camera.AddComponent<EditorComponent>();
+        camera.AddComponent<TransformComponent>();
+        camera.AddComponent<CameraComponent>();
+        camera.AddComponent<PerspectiveComponent>();
+        camera.AddComponent<VelocityComponent>();
+
+        this.Scene.AddEntity(camera);
+
+        var floor = new Entity();
+
+        floor.AddComponent(new TagComponent()
+        {
+            Name = "Floor",
+        });
+
+        floor.AddComponent<MeshComponent>();
+        floor.AddComponent(new TransformComponent()
+        {
+            Scale = new Vector3(100, 1, 100),
+        });
+
+        this.Scene.AddEntity(floor);
+
+        var cube = new Entity();
+
+        cube.AddComponent(new TagComponent()
+        {
+            Name = "Cube",
+        });
+
+        cube.AddComponent<VelocityComponent>();
+        cube.AddComponent<SpinComponent>();
+        cube.AddComponent<MeshComponent>();
+        cube.AddComponent(new TransformComponent()
+        {
+            Position = new Vector3(0, 40, 0),
+            Scale = new Vector3(20, 20, 20),
+        });
+
+        this.Scene.AddEntity(cube);
+
+        var light = new Entity();
+
+        light.AddComponent(new TagComponent()
+        {
+            Name = "Light",
+        });
+
+        light.AddComponent(new LightComponent()
+        {
+            Intensity = 4,
+        });
+
+        light.AddComponent(new TransformComponent()
+        {
+            Position = new Vector3(0, 10, 0),
+        });
+
+        this.Scene.AddEntity(light);
+
     }
 
     public void Render()
     {
         this.renderDevice.Clear(Color.Black);
-        this.ActiveScene.ProcessAll("Render");
-    }
-
-    public void SetViewport(Rectangle viewport)
-    {
-        this.ActiveScene.GetResource<ViewportBlackboardResource>().Resource = viewport;
+        this.Scene.ProcessAll("Render");
     }
 
     public void Update()
     {
-        this.ActiveScene.ProcessAll("Update");
+        this.Scene.ProcessAll("Update");
         this.inputDriver.Update();
     }
 }

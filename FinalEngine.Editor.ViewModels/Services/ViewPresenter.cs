@@ -21,6 +21,31 @@ public sealed class ViewPresenter : IViewPresenter
         this.provider = provider ?? throw new ArgumentNullException(nameof(provider));
     }
 
+    public void ShowDialog<TViewModel>()
+    {
+        if (this.provider.GetService(typeof(IFactory<TViewModel>)) is not IFactory<TViewModel> factory)
+        {
+            throw new ArgumentException($"The specified {nameof(TViewModel)} has not been registered with an {nameof(IFactory<TViewModel>)}.");
+        }
+
+        this.ShowDialog(factory.Create());
+    }
+
+    public void ShowDialog<TViewModel>(TViewModel viewModel)
+    {
+        ArgumentNullException.ThrowIfNull(viewModel, nameof(viewModel));
+
+        this.logger.LogInformation($"Showing dialog view for {typeof(TViewModel)}...");
+
+        if (this.provider.GetService(typeof(IDialogable<TViewModel>)) is not IDialogable<TViewModel> view)
+        {
+            throw new ArgumentException($"The specified {nameof(TViewModel)} couldn't be converted to an {nameof(IDialogable<TViewModel>)}.");
+        }
+
+        view.DataContext = viewModel;
+        view.ShowDialog();
+    }
+
     public void ShowView<TViewModel>()
     {
         if (this.provider.GetService(typeof(IFactory<TViewModel>)) is not IFactory<TViewModel> factory)
@@ -37,12 +62,12 @@ public sealed class ViewPresenter : IViewPresenter
 
         this.logger.LogInformation($"Showing dialog view for {typeof(TViewModel)}...");
 
-        if (this.provider.GetService(typeof(IViewable<TViewModel>)) is not IViewable<TViewModel> view)
+        if (this.provider.GetService(typeof(IShowable<TViewModel>)) is not IShowable<TViewModel> view)
         {
-            throw new ArgumentException($"The specified {nameof(TViewModel)} couldn't be converted to an {nameof(IViewable<TViewModel>)}.");
+            throw new ArgumentException($"The specified {nameof(TViewModel)} couldn't be converted to an {nameof(IDialogable<TViewModel>)}.");
         }
 
         view.DataContext = viewModel;
-        view.ShowDialog();
+        view.Show();
     }
 }

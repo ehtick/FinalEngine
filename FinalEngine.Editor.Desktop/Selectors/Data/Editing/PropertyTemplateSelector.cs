@@ -12,6 +12,8 @@ public sealed class PropertyTemplateSelector : DataTemplateSelector
 {
     public DataTemplate? BoolPropertyTemplate { get; set; }
 
+    public DataTemplate? ColorPropertyTemplate { get; set; }
+
     public DataTemplate? DoublePropertyTemplate { get; set; }
 
     public DataTemplate? FloatPropertyTemplate { get; set; }
@@ -41,6 +43,7 @@ public sealed class PropertyTemplateSelector : DataTemplateSelector
             Vector3PropertyViewModel => this.Vector3PropertyTemplate,
             Vector4PropertyViewModel => this.Vector4PropertyTemplate,
             QuaternionPropertyViewModel => this.QuaternionPropertyTemplate,
+            ColorPropertyViewModel => this.ColorPropertyTemplate,
             _ => base.SelectTemplate(item, container),
         };
     }

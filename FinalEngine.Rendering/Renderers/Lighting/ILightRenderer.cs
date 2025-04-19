@@ -5,12 +5,16 @@
 namespace FinalEngine.Rendering.Renderers.Lighting;
 
 using System;
-using System.Numerics;
+using System.Drawing;
 using FinalEngine.Rendering.Lighting;
 
-internal interface ILightRenderer : IRenderQueue<Light>
+public interface ILightRenderer : IRenderQueue<Light>
 {
-    void Render(Action renderScene);
+    Color AmbientColor { get; set; }
 
-    void SetAmbientLight(Vector3 color, float intensity);
+    float AmbientStrength { get; set; }
+
+    bool Enabled { get; set; }
+
+    void Render(Action renderScene);
 }

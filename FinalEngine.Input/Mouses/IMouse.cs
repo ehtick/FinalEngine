@@ -10,6 +10,8 @@ public interface IMouse
 {
     PointF Location { get; set; }
 
+    bool Visible { get; set; }
+
     double WheelOffset { get; }
 
     bool IsButtonDown(MouseButton button);

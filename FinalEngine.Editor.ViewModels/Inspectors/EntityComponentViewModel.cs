@@ -102,6 +102,10 @@ public sealed class EntityComponentViewModel : ObservableObject, IEntityComponen
                     this.propertyViewModels.Add(new QuaternionPropertyViewModel(component, property));
                     break;
 
+                case "COLOR":
+                    this.propertyViewModels.Add(new ColorPropertyViewModel(component, property));
+                    break;
+
                 default:
                     break;
                     //throw new PropertyTypeNotFoundException(type.Name);

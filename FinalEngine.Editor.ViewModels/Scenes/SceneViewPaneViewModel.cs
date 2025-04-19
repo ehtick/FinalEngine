@@ -17,27 +17,26 @@ public sealed class SceneViewPaneViewModel : PaneViewModelBase, ISceneViewPaneVi
 {
     private static bool isInitialized;
 
-    private readonly IPipeline pipeline;
+    private readonly IRenderDevice renderDevice;
 
     private readonly ISceneManager sceneManager;
 
     private ICommand? renderCommand;
 
-    private IRelayCommand<Rectangle>? updateViewCommand;
+    private ICommand? resizeCommand;
 
     public SceneViewPaneViewModel(
         ILogger<SceneViewPaneViewModel> logger,
         ISceneManager sceneManager,
-        IPipeline pipeline)
+        IRenderDevice renderDevice)
     {
         ArgumentNullException.ThrowIfNull(logger, nameof(logger));
 
         this.sceneManager = sceneManager ?? throw new ArgumentNullException(nameof(sceneManager));
-        this.pipeline = pipeline ?? throw new ArgumentNullException(nameof(pipeline));
+        this.renderDevice = renderDevice ?? throw new ArgumentNullException(nameof(renderDevice));
 
         this.Title = "Scene View";
         this.ContentID = "SceneView";
-
         logger.LogInformation($"Initializing {this.Title}...");
     }
 
@@ -46,16 +45,16 @@ public sealed class SceneViewPaneViewModel : PaneViewModelBase, ISceneViewPaneVi
         get { return this.renderCommand ??= new RelayCommand<int>(this.Render); }
     }
 
-    public IRelayCommand<Rectangle> UpdateViewCommand
+    public ICommand ResizeCommand
     {
-        get { return this.updateViewCommand ??= new RelayCommand<Rectangle>(this.UpdateView); }
+        get { return this.resizeCommand ??= new RelayCommand<Rectangle>(this.Resize); }
     }
 
     private void Render(int defaultFrameBuffer)
     {
         if (!isInitialized)
         {
-            this.pipeline.SetDefaultFrameBufferTarget(defaultFrameBuffer);
+            this.renderDevice.Pipeline.SetDefaultFrameBufferTarget(defaultFrameBuffer);
 
             this.sceneManager.Initialize();
             isInitialized = true;
@@ -65,8 +64,8 @@ public sealed class SceneViewPaneViewModel : PaneViewModelBase, ISceneViewPaneVi
         this.sceneManager.Render();
     }
 
-    private void UpdateView(Rectangle viewport)
+    private void Resize(Rectangle viewport)
     {
-        this.sceneManager.SetViewport(viewport);
+        this.renderDevice.Rasterizer.SetViewport(viewport);
     }
 }

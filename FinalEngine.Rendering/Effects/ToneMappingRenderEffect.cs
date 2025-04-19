@@ -15,11 +15,18 @@ public enum ToneMappingAlgorithm
 
 public sealed class ToneMappingRenderEffect : IRenderEffect
 {
-    public ToneMappingRenderEffect()
+    private static ToneMappingRenderEffect? instance;
+
+    private ToneMappingRenderEffect()
     {
         this.Enabled = true;
         this.Algorithm = ToneMappingAlgorithm.Exposure;
         this.Exposure = 1.0f;
+    }
+
+    public static ToneMappingRenderEffect Instance
+    {
+        get { return instance ??= new ToneMappingRenderEffect(); }
     }
 
     public ToneMappingAlgorithm Algorithm { get; set; }

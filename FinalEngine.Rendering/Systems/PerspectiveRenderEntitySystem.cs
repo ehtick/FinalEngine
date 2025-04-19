@@ -21,6 +21,8 @@ using FinalEngine.Resources;
 [EntitySystemProcess(EventName = "Render")]
 public sealed class PerspectiveRenderEntitySystem : EntitySystemBase
 {
+    private readonly IRenderDevice renderDevice;
+
     private readonly IRenderQueue<IRenderEffect> renderEffectQueue;
 
     private readonly IRenderingEngine renderingEngine;
@@ -30,19 +32,12 @@ public sealed class PerspectiveRenderEntitySystem : EntitySystemBase
         IRenderQueue<IRenderEffect> postRenderer,
         IRenderDevice renderDevice)
     {
-        ArgumentNullException.ThrowIfNull(renderDevice);
-
         this.renderingEngine = renderingEngine ?? throw new ArgumentNullException(nameof(renderingEngine));
         this.renderEffectQueue = postRenderer ?? throw new ArgumentNullException(nameof(postRenderer));
+        this.renderDevice = renderDevice ?? throw new ArgumentNullException(nameof(renderDevice));
     }
 
-    public (Vector3, float) AmbientLight { get; set; } = new(new Vector3(0.3f, 0.3f, 0.3f), 0.5f);
-
-    public InversionRenderEffect Inversion { get; } = new InversionRenderEffect();
-
     public ITextureCube SkyboxTexture { get; set; } = ResourceManager.Instance.LoadResource<ITextureCube>("Resources\\Textures\\Skybox\\skybox.fesk");
-
-    public ToneMappingRenderEffect ToneMapping { get; } = new ToneMappingRenderEffect();
 
     protected override bool IsMatch([NotNull] IReadOnlyEntity entity)
     {
@@ -53,17 +48,24 @@ public sealed class PerspectiveRenderEntitySystem : EntitySystemBase
 
     protected override void Process([NotNull] IEnumerable<Entity> entities)
     {
-        this.renderingEngine.SetAmbientLight(this.AmbientLight.Item1, this.AmbientLight.Item2);
         this.renderingEngine.SetSkybox(this.SkyboxTexture);
 
         foreach (var entity in entities)
         {
-            this.renderEffectQueue.Enqueue(this.ToneMapping);
-            this.renderEffectQueue.Enqueue(this.Inversion);
+            this.renderEffectQueue.Enqueue(ToneMappingRenderEffect.Instance);
+            this.renderEffectQueue.Enqueue(InversionRenderEffect.Instance);
 
             var transform = entity.GetComponent<TransformComponent>();
             var perspective = entity.GetComponent<PerspectiveComponent>();
             var camera = entity.GetComponent<CameraComponent>();
+
+            if (camera.IsViewportDynamic)
+            {
+                var viewport = this.renderDevice.Rasterizer.GetViewport();
+
+                camera.Viewport = viewport;
+                perspective.AspectRatio = viewport.Width / viewport.Height;
+            }
 
             this.renderingEngine.Render(new Camera()
             {

@@ -27,9 +27,13 @@ internal interface INativeWindowInvoker : IDisposable
 
     event Action<MouseWheelEventArgs> MouseWheel;
 
+    event Action<ResizeEventArgs> Resize;
+
     Vector2i ClientSize { get; }
 
     IGLFWGraphicsContext Context { get; }
+
+    CursorState CursorState { get; set; }
 
     bool IsDisposed { get; }
 

@@ -8,7 +8,7 @@ using FinalEngine.Editor.ViewModels.Dialogs.Entities;
 using FinalEngine.Editor.ViewModels.Services.Interactions;
 using MahApps.Metro.Controls;
 
-public partial class CreateEntityView : MetroWindow, IViewable<ICreateEntityViewModel>, ICloseable
+public partial class CreateEntityView : MetroWindow, IDialogable<ICreateEntityViewModel>, ICloseable
 {
     public CreateEntityView()
     {

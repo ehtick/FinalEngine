@@ -5,6 +5,7 @@
 namespace FinalEngine.Rendering.Lighting;
 
 using System;
+using System.Drawing;
 using System.Numerics;
 using FinalEngine.Maths;
 
@@ -23,7 +24,7 @@ public sealed class Light
 {
     public Light()
     {
-        this.Color = Vector3.One;
+        this.Color = Color.White;
         this.Intensity = 1.0f;
         this.Type = LightType.Point;
         this.Attenuation = new Attenuation();
@@ -35,7 +36,7 @@ public sealed class Light
 
     public Attenuation Attenuation { get; set; }
 
-    public Vector3 Color { get; set; }
+    public Color Color { get; set; }
 
     public Vector3 Direction { get; set; }
 

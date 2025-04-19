@@ -9,6 +9,7 @@ using System.Drawing;
 using FinalEngine.Input.Mouses;
 using FinalEngine.Platform.Desktop.OpenTK.Invocation;
 using global::OpenTK.Mathematics;
+using TKCursorState = global::OpenTK.Windowing.Common.CursorState;
 using TKMouseButtonEventArgs = global::OpenTK.Windowing.Common.MouseButtonEventArgs;
 using TKMouseMoveEventArgs = global::OpenTK.Windowing.Common.MouseMoveEventArgs;
 using TKMouseWheelEventArgs = global::OpenTK.Windowing.Common.MouseWheelEventArgs;
@@ -34,6 +35,12 @@ internal sealed class OpenTKMouseDevice : IMouseDevice
     public event EventHandler<MouseMoveEventArgs>? Move;
 
     public event EventHandler<MouseScrollEventArgs>? Scroll;
+
+    public bool ShowCursor
+    {
+        get { return this.nativeWindow.CursorState != TKCursorState.Hidden; }
+        set { this.nativeWindow.CursorState = value ? TKCursorState.Normal : TKCursorState.Hidden; }
+    }
 
     public void SetCursorLocation(PointF location)
     {

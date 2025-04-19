@@ -10,6 +10,7 @@ using System.Windows;
 using FinalEngine.Editor.Desktop.External;
 using FinalEngine.Input.Mouses;
 using OpenTK.Wpf;
+using WCursors = System.Windows.Input.Cursors;
 using WMouseButton = System.Windows.Input.MouseButton;
 using WMouseButtonEventArgs = System.Windows.Input.MouseButtonEventArgs;
 using WMouseEventArgs = System.Windows.Input.MouseEventArgs;
@@ -17,6 +18,8 @@ using WMouseWheelEventArgs = System.Windows.Input.MouseWheelEventArgs;
 
 internal sealed class WPFMouseDevice : IMouseDevice
 {
+    private GLWpfControl? control;
+
     public event EventHandler<MouseButtonEventArgs>? ButtonDown;
 
     public event EventHandler<MouseButtonEventArgs>? ButtonUp;
@@ -25,9 +28,27 @@ internal sealed class WPFMouseDevice : IMouseDevice
 
     public event EventHandler<MouseScrollEventArgs>? Scroll;
 
+    public bool ShowCursor
+    {
+        get
+        {
+            return this.control?.Cursor != WCursors.None;
+        }
+
+        set
+        {
+            if (this.control == null)
+            {
+                return;
+            }
+
+            this.control.Cursor = value ? WCursors.Arrow : WCursors.None;
+        }
+    }
+
     public void Initialize(GLWpfControl control)
     {
-        ArgumentNullException.ThrowIfNull(control, nameof(control));
+        this.control = control ?? throw new ArgumentNullException(nameof(control));
 
         control.PreviewMouseUp += this.Control_PreviewMouseUp;
         control.PreviewMouseDown += this.Control_PreviewMouseDown;

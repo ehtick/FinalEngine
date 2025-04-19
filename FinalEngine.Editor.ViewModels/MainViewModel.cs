@@ -8,12 +8,15 @@ using System;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using FinalEngine.ECS;
+using FinalEngine.ECS.Components;
 using FinalEngine.Editor.Common.Services.Application;
+using FinalEngine.Editor.Common.Services.Entities;
 using FinalEngine.Editor.Common.Services.Factories;
 using FinalEngine.Editor.Common.Services.Scenes;
-using FinalEngine.Editor.ViewModels.Dialogs.Entities;
 using FinalEngine.Editor.ViewModels.Dialogs.Layout;
 using FinalEngine.Editor.ViewModels.Docking;
+using FinalEngine.Editor.ViewModels.Rendering;
 using FinalEngine.Editor.ViewModels.Services;
 using FinalEngine.Editor.ViewModels.Services.Interactions;
 using FinalEngine.Editor.ViewModels.Services.Layout;
@@ -30,7 +33,25 @@ public sealed class MainViewModel : ObservableObject, IMainViewModel
 
     private readonly IViewPresenter viewPresenter;
 
+    private ICommand? createConeCommand;
+
+    private ICommand? createCubeCommand;
+
+    private ICommand? createCylinderCommand;
+
+    private ICommand? createDirectionalLightCommand;
+
     private ICommand? createEntityCommand;
+
+    private ICommand? createPlaneCommand;
+
+    private ICommand? createPointLightCommand;
+
+    private ICommand? createSphereCommand;
+
+    private ICommand? createSpotLightCommand;
+
+    private ICommand? createTorusCommand;
 
     private ICommand? exitCommand;
 
@@ -39,6 +60,8 @@ public sealed class MainViewModel : ObservableObject, IMainViewModel
     private ICommand? resetWindowLayoutCommand;
 
     private ICommand? saveWindowLayoutCommand;
+
+    private ICommand? showRenderingSettingsCommand;
 
     private ICommand? toggleToolWindowCommand;
 
@@ -73,9 +96,54 @@ public sealed class MainViewModel : ObservableObject, IMainViewModel
         }
     }
 
+    public ICommand CreateConeCommand
+    {
+        get { return this.createConeCommand ??= new RelayCommand(this.CreateCone); }
+    }
+
+    public ICommand CreateCubeCommand
+    {
+        get { return this.createCubeCommand ??= new RelayCommand(this.CreateCube); }
+    }
+
+    public ICommand CreateCylinderCommand
+    {
+        get { return this.createCylinderCommand ??= new RelayCommand(this.CreateCylinder); }
+    }
+
+    public ICommand CreateDirectionalLightCommand
+    {
+        get { return this.createDirectionalLightCommand ??= new RelayCommand(this.CreateDirectionalLight); }
+    }
+
     public ICommand CreateEntityCommand
     {
-        get { return this.createEntityCommand ??= new RelayCommand<string>(this.CreateEntity); }
+        get { return this.createEntityCommand ??= new RelayCommand(this.CreateEntity); }
+    }
+
+    public ICommand CreatePlaneCommand
+    {
+        get { return this.createPlaneCommand ??= new RelayCommand(this.CreatePlane); }
+    }
+
+    public ICommand CreatePointLightCommand
+    {
+        get { return this.createPointLightCommand ??= new RelayCommand(this.CreatePointLight); }
+    }
+
+    public ICommand CreateSphereCommand
+    {
+        get { return this.createSphereCommand ??= new RelayCommand(this.CreateSphere); }
+    }
+
+    public ICommand CreateSpotLightCommand
+    {
+        get { return this.createSpotLightCommand ??= new RelayCommand(this.CreateSpotLight); }
+    }
+
+    public ICommand CreateTorusCommand
+    {
+        get { return this.createTorusCommand ??= new RelayCommand(this.CreateTorus); }
     }
 
     public IDockViewModel DockViewModel { get; }
@@ -100,6 +168,11 @@ public sealed class MainViewModel : ObservableObject, IMainViewModel
         get { return this.saveWindowLayoutCommand ??= new RelayCommand(this.ShowSaveWindowLayoutView); }
     }
 
+    public ICommand ShowRenderingSettingsCommand
+    {
+        get { return this.showRenderingSettingsCommand ??= new RelayCommand(this.ShowRenderingSettingsView); }
+    }
+
     public string Title { get; }
 
     public ICommand ToggleToolWindowCommand
@@ -116,9 +189,63 @@ public sealed class MainViewModel : ObservableObject, IMainViewModel
         closeable.Close();
     }
 
-    private void CreateEntity(string? type)
+    private void CreateCone()
     {
-        this.viewPresenter.ShowView<ICreateEntityViewModel>();
+        this.sceneManager.Scene.AddEntity(ConeEntityFactory.Instance.CreateEntity());
+    }
+
+    private void CreateCube()
+    {
+        this.sceneManager.Scene.AddEntity(CubeEntityFactory.Instance.CreateEntity());
+    }
+
+    private void CreateCylinder()
+    {
+        this.sceneManager.Scene.AddEntity(CylinderEntityFactory.Instance.CreateEntity());
+    }
+
+    private void CreateDirectionalLight()
+    {
+        this.sceneManager.Scene.AddEntity(DirectionalLightEntityFactory.Instance.CreateEntity());
+    }
+
+    private void CreateEntity()
+    {
+        var entity = new Entity();
+
+        entity.AddComponent(new TagComponent()
+        {
+            Name = "Empty",
+        });
+
+        entity.AddComponent<TransformComponent>();
+
+        this.sceneManager.Scene.AddEntity(entity);
+    }
+
+    private void CreatePlane()
+    {
+        this.sceneManager.Scene.AddEntity(PlaneEntityFactory.Instance.CreateEntity());
+    }
+
+    private void CreatePointLight()
+    {
+        this.sceneManager.Scene.AddEntity(PointLightEntityFactory.Instance.CreateEntity());
+    }
+
+    private void CreateSphere()
+    {
+        this.sceneManager.Scene.AddEntity(SphereEntityFactory.Instance.CreateEntity());
+    }
+
+    private void CreateSpotLight()
+    {
+        this.sceneManager.Scene.AddEntity(SpotLightEntityFactory.Instance.CreateEntity());
+    }
+
+    private void CreateTorus()
+    {
+        this.sceneManager.Scene.AddEntity(TorusEntityFactory.Instance.CreateEntity());
     }
 
     private void ResetWindowLayout()
@@ -128,12 +255,17 @@ public sealed class MainViewModel : ObservableObject, IMainViewModel
 
     private void ShowManageWindowLayoutsView()
     {
-        this.viewPresenter.ShowView<IManageWindowLayoutsViewModel>();
+        this.viewPresenter.ShowDialog<IManageWindowLayoutsViewModel>();
+    }
+
+    private void ShowRenderingSettingsView()
+    {
+        this.viewPresenter.ShowView<IRenderingSettingsViewModel>();
     }
 
     private void ShowSaveWindowLayoutView()
     {
-        this.viewPresenter.ShowView<ISaveWindowLayoutViewModel>();
+        this.viewPresenter.ShowDialog<ISaveWindowLayoutViewModel>();
     }
 
     private void ToggleToolWindow(string? contentID)

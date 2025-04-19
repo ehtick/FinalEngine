@@ -33,7 +33,7 @@ public static class ServiceCollectionExtensions
 
                 AutoLoadBindings = false,
 
-                WindowBorder = WindowBorder.Fixed,
+                WindowBorder = WindowBorder.Resizable,
                 WindowState = WindowState.Normal,
 
                 ClientSize = new Vector2i(1280, 720),

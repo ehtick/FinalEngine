@@ -83,17 +83,10 @@ public sealed class CameraUpdateEntitySystem : EntitySystemBase
         var viewport = camera.Viewport;
         var centerPosition = new Vector2(viewport.Width / 2, viewport.Height / 2);
 
-        if (this.keyboard.IsKeyReleased(Key.Escape))
-        {
-            camera.IsLocked = false;
-        }
+        bool canMove = this.mouse.IsButtonDown(MouseButton.Left);
 
-        if (this.mouse.IsButtonReleased(MouseButton.Left))
-        {
-            this.mouse.Location = new PointF(centerPosition.X, centerPosition.Y);
-
-            camera.IsLocked = true;
-        }
+        this.mouse.Visible = !canMove;
+        camera.IsLocked = canMove;
 
         if (camera.IsLocked)
         {

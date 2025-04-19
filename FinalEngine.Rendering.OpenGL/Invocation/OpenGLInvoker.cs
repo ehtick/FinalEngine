@@ -21,7 +21,10 @@ internal sealed class OpenGLInvoker : IOpenGLInvoker
 
     ~OpenGLInvoker()
     {
-        debugProcCallbackHandle.Free();
+        if (debugProcCallbackHandle != default)
+        {
+            debugProcCallbackHandle.Free();
+        }
     }
 
     public void AttachShader(int program, int shader)
@@ -121,6 +124,26 @@ internal sealed class OpenGLInvoker : IOpenGLInvoker
         GL.CompileShader(shader);
     }
 
+    public void CopyImageSubData(
+        int srcName,
+        ImageTarget srcTarget,
+        int srcLevel,
+        int srcX,
+        int srcY,
+        int srcZ,
+        int dstName,
+        ImageTarget dstTarget,
+        int dstLevel,
+        int dstX,
+        int dstY,
+        int dstZ,
+        int srcWidth,
+        int srcHeight,
+        int srcDepth)
+    {
+        GL.CopyImageSubData(srcName, srcTarget, srcLevel, srcX, srcY, srcZ, dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth, srcHeight, srcDepth);
+    }
+
     public int CreateBuffer()
     {
         GL.CreateBuffers(1, out int result);
@@ -154,6 +177,21 @@ internal sealed class OpenGLInvoker : IOpenGLInvoker
     public void CullFace(CullFaceMode mode)
     {
         GL.CullFace(mode);
+    }
+
+    public void Debug()
+    {
+        debugProcCallbackHandle = GCHandle.Alloc(DebugProcCallback);
+
+        GL.DebugMessageCallback(DebugProcCallback, IntPtr.Zero);
+
+        GL.Enable(EnableCap.DebugOutput);
+        GL.Enable(EnableCap.DebugOutputSynchronous);
+
+        Console.WriteLine($"Vendor: {GL.GetString(StringName.Vendor)}");
+        Console.WriteLine($"Version: {GL.GetString(StringName.Version)}");
+        Console.WriteLine($"Renderer: {GL.GetString(StringName.Renderer)}");
+        Console.WriteLine($"Shader Version: {GL.GetString(StringName.ShadingLanguageVersion)}");
     }
 
     public void DeleteBuffer(int buffers)
@@ -279,20 +317,6 @@ internal sealed class OpenGLInvoker : IOpenGLInvoker
     public void LoadBindings(IBindingsContext context)
     {
         GL.LoadBindings(context);
-
-        debugProcCallbackHandle = GCHandle.Alloc(DebugProcCallback);
-
-        GL.DebugMessageCallback(DebugProcCallback, IntPtr.Zero);
-
-        GL.Enable(EnableCap.DebugOutput);
-        GL.Enable(EnableCap.DebugOutputSynchronous);
-
-#if DEBUG
-        Console.WriteLine($"Vendor: {GL.GetString(StringName.Vendor)}");
-        Console.WriteLine($"Version: {GL.GetString(StringName.Version)}");
-        Console.WriteLine($"Renderer: {GL.GetString(StringName.Renderer)}");
-        Console.WriteLine($"Shader Version: {GL.GetString(StringName.ShadingLanguageVersion)}");
-#endif
     }
 
     public void NamedBufferData<T2>(int buffer, int size, T2[] data, BufferUsageHint usage)
@@ -305,6 +329,16 @@ internal sealed class OpenGLInvoker : IOpenGLInvoker
         where T3 : struct
     {
         GL.NamedBufferSubData(buffer, offset, size, data);
+    }
+
+    public void NamedFramebufferDrawBuffer(int framebuffer, DrawBufferMode buf)
+    {
+        GL.NamedFramebufferDrawBuffer(framebuffer, buf);
+    }
+
+    public void NamedFramebufferReadBuffer(int framebuffer, ReadBufferMode buf)
+    {
+        GL.NamedFramebufferReadBuffer(framebuffer, buf);
     }
 
     public void NamedFramebufferTexture(int framebuffer, FramebufferAttachment attachment, int texture, int level)
@@ -355,26 +389,6 @@ internal sealed class OpenGLInvoker : IOpenGLInvoker
     public void TextureSubImage2D(int texture, int level, int xoffset, int yoffset, int width, int height, PixelFormat format, PixelType type, IntPtr pixels)
     {
         GL.TextureSubImage2D(texture, level, xoffset, yoffset, width, height, format, type, pixels);
-    }
-
-    public void CopyImageSubData(
-        int srcName,
-        ImageTarget srcTarget,
-        int srcLevel,
-        int srcX,
-        int srcY,
-        int srcZ,
-        int dstName,
-        ImageTarget dstTarget,
-        int dstLevel,
-        int dstX,
-        int dstY,
-        int dstZ,
-        int srcWidth,
-        int srcHeight,
-        int srcDepth)
-    {
-        GL.CopyImageSubData(srcName, srcTarget, srcLevel, srcX, srcY, srcZ, dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth, srcHeight, srcDepth);
     }
 
     public void Uniform1(int location, int x)
@@ -435,16 +449,6 @@ internal sealed class OpenGLInvoker : IOpenGLInvoker
     public void Viewport(Rectangle rectangle)
     {
         GL.Viewport(rectangle);
-    }
-
-    public void NamedFramebufferDrawBuffer(int framebuffer, DrawBufferMode buf)
-    {
-        GL.NamedFramebufferDrawBuffer(framebuffer, buf);
-    }
-
-    public void NamedFramebufferReadBuffer(int framebuffer, ReadBufferMode buf)
-    {
-        GL.NamedFramebufferReadBuffer(framebuffer, buf);
     }
 
     private static void DebugCallback(

@@ -6,8 +6,10 @@ namespace FinalEngine.Rendering.OpenGL;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 using FinalEngine.Rendering.Buffers;
+using FinalEngine.Rendering.Exceptions;
 using FinalEngine.Rendering.OpenGL.Buffers;
 using FinalEngine.Rendering.OpenGL.Invocation;
 using FinalEngine.Rendering.OpenGL.Pipeline;
@@ -82,7 +84,16 @@ internal sealed class OpenGLPipeline : IPipeline
         if (frameBuffer == null)
         {
             this.boundFrameBuffer = null;
-            this.invoker.BindFramebuffer(FramebufferTarget.Framebuffer, this.defaultFrameBufferTarget);
+            try
+            {
+                this.invoker.BindFramebuffer(FramebufferTarget.Framebuffer, this.defaultFrameBufferTarget);
+            }
+            catch (RenderContextException)
+            {
+                Debug.WriteLine($"Binding to zero framebuffer as the default frame buffer targett threw a {nameof(RenderContextException)}.");
+                this.invoker.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            }
+
             return;
         }
 

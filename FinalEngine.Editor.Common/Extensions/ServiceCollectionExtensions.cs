@@ -9,9 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using FinalEngine.Editor.Common.Services.Application;
 using FinalEngine.Editor.Common.Services.Environment;
 using FinalEngine.Editor.Common.Services.Factories;
-using FinalEngine.Editor.Common.Services.Factories.Entities.Cameras;
 using FinalEngine.Editor.Common.Services.Scenes;
-using FinalEngine.Editor.Common.Systems;
 using Microsoft.Extensions.DependencyInjection;
 
 [ExcludeFromCodeCoverage(Justification = "Extensions")]
@@ -24,9 +22,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IApplicationContext, ApplicationContext>();
         services.AddSingleton<IEnvironmentContext, EnvironmentContext>();
         services.AddSingleton<ISceneManager, SceneManager>();
-
-        services.AddSingleton<ViewportUpdateEntitySystem>();
-        services.AddSingleton<EditorCameraEntityFactory>();
+        services.AddTransient<IScene, Scene>();
 
         return services;
     }

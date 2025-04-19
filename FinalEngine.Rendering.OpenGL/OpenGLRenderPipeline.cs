@@ -35,6 +35,10 @@ internal sealed class OpenGLRenderPipeline : IRenderPipeline
     {
         ObjectDisposedException.ThrowIf(this.isDisposed, this);
 
+#if DEBUG
+        this.invoker.Debug();
+#endif
+
         this.vao = this.invoker.GenVertexArray();
         this.invoker.BindVertexArray(this.vao);
     }

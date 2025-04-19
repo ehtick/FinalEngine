@@ -16,12 +16,14 @@ using FinalEngine.Editor.Desktop.Services.Layout;
 using FinalEngine.Editor.Desktop.Views;
 using FinalEngine.Editor.Desktop.Views.Dialogs.Entities;
 using FinalEngine.Editor.Desktop.Views.Dialogs.Layout;
+using FinalEngine.Editor.Desktop.Views.Rendering;
 using FinalEngine.Editor.ViewModels;
 using FinalEngine.Editor.ViewModels.Dialogs.Entities;
 using FinalEngine.Editor.ViewModels.Dialogs.Layout;
 using FinalEngine.Editor.ViewModels.Docking;
 using FinalEngine.Editor.ViewModels.Inspectors;
 using FinalEngine.Editor.ViewModels.Projects;
+using FinalEngine.Editor.ViewModels.Rendering;
 using FinalEngine.Editor.ViewModels.Scenes;
 using FinalEngine.Editor.ViewModels.Services;
 using FinalEngine.Editor.ViewModels.Services.Actions;
@@ -100,11 +102,16 @@ public partial class App : Application
         services.AddFactory<ISaveWindowLayoutViewModel, SaveWindowLayoutViewModel>();
         services.AddFactory<IManageWindowLayoutsViewModel, ManageWindowLayoutsViewModel>();
         services.AddFactory<ICreateEntityViewModel, CreateEntityViewModel>();
+        services.AddFactory<IRenderingSettingsViewModel, RenderingSettingsViewModel>();
+        services.AddFactory<IPostRendererViewModel, PostRendererViewModel>();
+        services.AddFactory<ILightRendererViewModel, LightRendererViewModel>();
+
         services.AddSingleton<IMainViewModel, MainViewModel>();
 
-        services.AddTransient<IViewable<ISaveWindowLayoutViewModel>, SaveWindowLayoutView>();
-        services.AddTransient<IViewable<IManageWindowLayoutsViewModel>, ManageWindowLayoutsView>();
-        services.AddTransient<IViewable<ICreateEntityViewModel>, CreateEntityView>();
+        services.AddTransient<IDialogable<ISaveWindowLayoutViewModel>, SaveWindowLayoutView>();
+        services.AddTransient<IDialogable<IManageWindowLayoutsViewModel>, ManageWindowLayoutsView>();
+        services.AddTransient<IDialogable<ICreateEntityViewModel>, CreateEntityView>();
+        services.AddTransient<IShowable<IRenderingSettingsViewModel>, RenderingSettingsView>();
 
         services.AddSingleton<IEntityComponentTypeResolver, EntityComponentTypeResolver>();
 

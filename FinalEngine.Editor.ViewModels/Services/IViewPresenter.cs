@@ -6,6 +6,10 @@ namespace FinalEngine.Editor.ViewModels.Services;
 
 public interface IViewPresenter
 {
+    void ShowDialog<TViewModel>();
+
+    void ShowDialog<TViewModel>(TViewModel viewModel);
+
     void ShowView<TViewModel>();
 
     void ShowView<TViewModel>(TViewModel viewModel);

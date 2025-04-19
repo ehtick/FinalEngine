@@ -8,7 +8,7 @@ using FinalEngine.Editor.ViewModels.Dialogs.Layout;
 using FinalEngine.Editor.ViewModels.Services.Interactions;
 using MahApps.Metro.Controls;
 
-public partial class SaveWindowLayoutView : MetroWindow, IViewable<ISaveWindowLayoutViewModel>, ICloseable
+public partial class SaveWindowLayoutView : MetroWindow, IDialogable<ISaveWindowLayoutViewModel>, ICloseable
 {
     public SaveWindowLayoutView()
     {

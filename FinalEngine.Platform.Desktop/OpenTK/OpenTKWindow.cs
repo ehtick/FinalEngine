@@ -7,6 +7,7 @@ namespace FinalEngine.Platform.Desktop.OpenTK;
 using System;
 using System.Drawing;
 using FinalEngine.Platform.Desktop.OpenTK.Invocation;
+using FinalEngine.Platform.Events;
 using global::OpenTK.Mathematics;
 
 internal sealed class OpenTKWindow : IWindow, IEventsProcessor
@@ -18,12 +19,16 @@ internal sealed class OpenTKWindow : IWindow, IEventsProcessor
     public OpenTKWindow(INativeWindowInvoker nativeWindow)
     {
         this.nativeWindow = nativeWindow ?? throw new ArgumentNullException(nameof(nativeWindow));
+
+        this.nativeWindow.Resize += this.NativeWindow_Resize;
     }
 
     ~OpenTKWindow()
     {
         this.Dispose(false);
     }
+
+    public event EventHandler<SizeChangedEventArgs>? SizeChanged;
 
     public bool CanProcessEvents
     {
@@ -141,6 +146,13 @@ internal sealed class OpenTKWindow : IWindow, IEventsProcessor
             this.nativeWindow.Dispose();
         }
 
+        this.nativeWindow.Resize -= this.NativeWindow_Resize;
+
         this.isDisposed = true;
+    }
+
+    private void NativeWindow_Resize(global::OpenTK.Windowing.Common.ResizeEventArgs args)
+    {
+        this.SizeChanged?.Invoke(this, new SizeChangedEventArgs(this.ClientBounds));
     }
 }

@@ -6,6 +6,7 @@ namespace FinalEngine.Rendering.Components;
 
 using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Numerics;
 using FinalEngine.ECS;
 using FinalEngine.Maths;
@@ -16,7 +17,7 @@ public class LightComponent : IEntityComponent
 {
     public LightComponent()
     {
-        this.Color = Vector3.One;
+        this.Color = Color.White;
         this.Intensity = 1.0f;
         this.Type = LightType.Point;
         this.Attenuation = new Attenuation();
@@ -27,7 +28,7 @@ public class LightComponent : IEntityComponent
 
     public Attenuation Attenuation { get; set; }
 
-    public Vector3 Color { get; set; }
+    public Color Color { get; set; }
 
     public Vector3 Direction { get; set; }
 

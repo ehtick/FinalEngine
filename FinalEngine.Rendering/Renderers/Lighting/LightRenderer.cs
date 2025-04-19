@@ -6,7 +6,8 @@ namespace FinalEngine.Rendering.Renderers.Lighting;
 
 using System;
 using System.Collections.Generic;
-using System.Numerics;
+using System.Drawing;
+using FinalEngine.Maths.Extensions;
 using FinalEngine.Rendering.Lighting;
 using FinalEngine.Rendering.Pipeline;
 using FinalEngine.Resources;
@@ -33,6 +34,8 @@ internal sealed class LightRenderer : ILightRenderer
 
         this.lightTypeToLightMap = [];
 
+        this.Enabled = true;
+
         this.ambientLight = new Light()
         {
             Type = LightType.Ambient,
@@ -40,10 +43,32 @@ internal sealed class LightRenderer : ILightRenderer
         };
     }
 
+    public Color AmbientColor
+    {
+        get { return this.ambientLight.Color; }
+        set { this.ambientLight.Color = value; }
+    }
+
+    public float AmbientStrength
+    {
+        get { return this.ambientLight.Intensity; }
+        set { this.ambientLight.Intensity = value; }
+    }
+
     public bool CanRender
     {
-        get { return this.lightTypeToLightMap.Count != 0; }
+        get
+        {
+            if (!this.Enabled)
+            {
+                return false;
+            }
+
+            return this.lightTypeToLightMap.Count != 0 || this.Enabled;
+        }
     }
+
+    public bool Enabled { get; set; }
 
     private IShaderProgram AmbientProgram
     {
@@ -110,12 +135,6 @@ internal sealed class LightRenderer : ILightRenderer
                 this.Conclude();
             }
         }
-    }
-
-    public void SetAmbientLight(Vector3 color, float intensity)
-    {
-        this.ambientLight.Color = color;
-        this.ambientLight.Intensity = intensity;
     }
 
     private void Conclude()
@@ -214,7 +233,7 @@ internal sealed class LightRenderer : ILightRenderer
                 throw new NotSupportedException($"The specified {nameof(light)} is not supported by the {nameof(LightRenderer)}.");
         }
 
-        this.renderDevice.Pipeline.SetUniform("u_light.base.color", light.Color);
+        this.renderDevice.Pipeline.SetUniform("u_light.base.color", light.Color.ToVector3());
         this.renderDevice.Pipeline.SetUniform("u_light.base.intensity", light.Intensity);
     }
 }

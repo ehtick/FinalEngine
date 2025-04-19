@@ -77,6 +77,8 @@ internal interface IOpenGLInvoker
 
     void CullFace(CullFaceMode mode);
 
+    void Debug();
+
     void DeleteBuffer(int buffers);
 
     void DeleteFramebuffer(int framebuffers);
