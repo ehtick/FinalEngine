@@ -83,7 +83,7 @@ public sealed class CameraUpdateEntitySystem : EntitySystemBase
         var viewport = camera.Viewport;
         var centerPosition = new Vector2(viewport.Width / 2, viewport.Height / 2);
 
-        bool canMove = this.mouse.IsButtonDown(MouseButton.Left);
+        bool canMove = this.mouse.IsButtonDown(MouseButton.Right);
 
         this.mouse.Visible = !canMove;
         camera.IsLocked = canMove;

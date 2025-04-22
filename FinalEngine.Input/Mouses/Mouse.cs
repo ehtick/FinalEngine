@@ -47,6 +47,7 @@ internal sealed class Mouse : IMouse, IDisposable
                 return;
             }
 
+            this.location = value;
             this.device.SetCursorLocation(value);
         }
     }
@@ -58,6 +59,12 @@ internal sealed class Mouse : IMouse, IDisposable
     }
 
     public double WheelOffset { get; private set; }
+
+    public void Clear()
+    {
+        this.buttonsDown.Clear();
+        this.buttonsDownLast.Clear();
+    }
 
     public void Dispose()
     {

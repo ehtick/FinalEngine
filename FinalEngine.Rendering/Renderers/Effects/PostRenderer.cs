@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
 using FinalEngine.Maths;
+using FinalEngine.Maths.Extensions;
 using FinalEngine.Rendering.Buffers;
 using FinalEngine.Rendering.Cameras;
 using FinalEngine.Rendering.Effects;
@@ -136,7 +137,11 @@ internal sealed class PostRenderer : IPostRenderer, IDisposable
         this.renderDevice.Pipeline.SetShaderProgram(this.ShaderProgram);
 
         this.renderDevice.Pipeline.SetUniform("u_screenTexture", 0);
+        this.renderDevice.Pipeline.SetUniform("u_depthTexture", 1);
+        this.renderDevice.Pipeline.SetUniform("u_inverseProjection", camera.Projection.Inverted());
+
         this.renderDevice.Pipeline.SetTexture(this.colorTexture!, 0);
+        this.renderDevice.Pipeline.SetTexture(this.depthTexture!, 1);
 
         foreach (var renderEffect in this.renderEffects)
         {

@@ -4,19 +4,17 @@
 
 namespace FinalEngine.Editor.Desktop.Views.Scenes;
 
-using System.Drawing;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using FinalEngine.Editor.Desktop.Framework.Input;
+using FinalEngine.Editor.Desktop.Input;
 using FinalEngine.Editor.ViewModels.Scenes;
-using FinalEngine.Utilities;
 using OpenTK.Windowing.Common;
 using OpenTK.Wpf;
+using MouseButtonEventArgs = System.Windows.Input.MouseButtonEventArgs;
 
 public partial class SceneView : UserControl
 {
-    private readonly IGameTime gameTime;
-
     static SceneView()
     {
         FocusableProperty.OverrideMetadata(typeof(GLWpfControl), new FrameworkPropertyMetadata(true));
@@ -32,7 +30,7 @@ public partial class SceneView : UserControl
         this.glWpfControl.Focusable = true;
 
         this.glWpfControl.MouseDown += this.GlWpfControl_MouseDown;
-        this.glWpfControl.SizeChanged += this.GlWpfControl_SizeChanged;
+        this.glWpfControl.Loaded += this.GlWpfControl_Loaded;
         this.glWpfControl.Render += this.GlWpfControl_Render;
 
         this.glWpfControl.Start(new GLWpfControlSettings()
@@ -45,8 +43,6 @@ public partial class SceneView : UserControl
             UseDeviceDpi = true,
         });
 
-        this.gameTime = new GameTime(120.0d);
-
         KeyboardDevice.Initialize(this.glWpfControl);
         MouseDevice.Initialize(this.glWpfControl);
     }
@@ -55,37 +51,24 @@ public partial class SceneView : UserControl
 
     internal static WPFMouseDevice MouseDevice { get; } = new WPFMouseDevice();
 
-    private void GlWpfControl_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    private void GlWpfControl_Loaded(object sender, RoutedEventArgs e)
+    {
+        if (this.DataContext is ISceneViewPaneViewModel viewModel)
+        {
+            viewModel.LoadCommand.Execute(this.glWpfControl.Framebuffer);
+        }
+    }
+
+    private void GlWpfControl_MouseDown(object sender, MouseButtonEventArgs e)
     {
         this.glWpfControl.Focus();
     }
 
-    private void GlWpfControl_Render(System.TimeSpan obj)
+    private void GlWpfControl_Render(TimeSpan obj)
     {
-        if (!this.gameTime.CanProcessNextFrame())
-        {
-            return;
-        }
-
         if (this.DataContext is ISceneViewPaneViewModel vm)
         {
             vm.RenderCommand.Execute(this.glWpfControl.Framebuffer);
-        }
-    }
-
-    private void GlWpfControl_SizeChanged(object sender, SizeChangedEventArgs e)
-    {
-        if (!this.gameTime.CanProcessNextFrame())
-        {
-            return;
-        }
-
-        if (this.DataContext is ISceneViewPaneViewModel viewModel)
-        {
-            int w = (int)e.NewSize.Width;
-            int h = (int)e.NewSize.Height;
-
-            viewModel.ResizeCommand.Execute(new Rectangle(0, 0, w, h));
         }
     }
 }

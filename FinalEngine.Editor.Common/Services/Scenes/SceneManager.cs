@@ -6,7 +6,6 @@ namespace FinalEngine.Editor.Common.Services.Scenes;
 
 using System;
 using System.Drawing;
-using System.Numerics;
 using FinalEngine.ECS;
 using FinalEngine.ECS.Components;
 using FinalEngine.Editor.Common.Components;
@@ -40,7 +39,6 @@ internal sealed class SceneManager : ISceneManager
         this.renderPipeline.Initialize();
 
         this.Scene.AddSystem<CameraUpdateEntitySystem>();
-        this.Scene.AddSystem<SpinUpdateEntitySystem>();
 
         this.Scene.AddSystem<MeshRenderEntitySystem>();
         this.Scene.AddSystem<LightRenderEntitySystem>();
@@ -56,59 +54,6 @@ internal sealed class SceneManager : ISceneManager
         camera.AddComponent<VelocityComponent>();
 
         this.Scene.AddEntity(camera);
-
-        var floor = new Entity();
-
-        floor.AddComponent(new TagComponent()
-        {
-            Name = "Floor",
-        });
-
-        floor.AddComponent<MeshComponent>();
-        floor.AddComponent(new TransformComponent()
-        {
-            Scale = new Vector3(100, 1, 100),
-        });
-
-        this.Scene.AddEntity(floor);
-
-        var cube = new Entity();
-
-        cube.AddComponent(new TagComponent()
-        {
-            Name = "Cube",
-        });
-
-        cube.AddComponent<VelocityComponent>();
-        cube.AddComponent<SpinComponent>();
-        cube.AddComponent<MeshComponent>();
-        cube.AddComponent(new TransformComponent()
-        {
-            Position = new Vector3(0, 40, 0),
-            Scale = new Vector3(20, 20, 20),
-        });
-
-        this.Scene.AddEntity(cube);
-
-        var light = new Entity();
-
-        light.AddComponent(new TagComponent()
-        {
-            Name = "Light",
-        });
-
-        light.AddComponent(new LightComponent()
-        {
-            Intensity = 4,
-        });
-
-        light.AddComponent(new TransformComponent()
-        {
-            Position = new Vector3(0, 10, 0),
-        });
-
-        this.Scene.AddEntity(light);
-
     }
 
     public void Render()

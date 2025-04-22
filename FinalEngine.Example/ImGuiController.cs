@@ -54,10 +54,11 @@ public class ImGuiController : IDisposable
         int major = GL.GetInteger(GetPName.MajorVersion);
         int minor = GL.GetInteger(GetPName.MinorVersion);
 
-        KHRDebugAvailable = major == 4 && minor >= 3 || IsExtensionSupported("KHR_debug");
+        KHRDebugAvailable = (major == 4 && minor >= 3) || IsExtensionSupported("KHR_debug");
 
         nint context = ImGui.CreateContext();
         ImGui.SetCurrentContext(context);
+
         var io = ImGui.GetIO();
         io.Fonts.AddFontDefault();
 
@@ -270,11 +271,6 @@ void main()
     /// </summary>
     public void Update(IKeyboard keyboard, IMouse mouse, float deltaSeconds)
     {
-        if (this._frameBegun)
-        {
-            ImGui.Render();
-        }
-
         this.SetPerFrameImGuiData(deltaSeconds);
         this.UpdateImGuiInput(keyboard, mouse);
 

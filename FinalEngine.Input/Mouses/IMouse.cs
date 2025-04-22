@@ -14,6 +14,8 @@ public interface IMouse
 
     double WheelOffset { get; }
 
+    void Clear();
+
     bool IsButtonDown(MouseButton button);
 
     bool IsButtonPressed(MouseButton button);

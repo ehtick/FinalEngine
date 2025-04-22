@@ -8,9 +8,9 @@ using System;
 
 public enum ToneMappingAlgorithm
 {
-    Reinhard,
+    Reinhard = 0,
 
-    Exposure,
+    Exposure = 1,
 }
 
 public sealed class ToneMappingRenderEffect : IRenderEffect

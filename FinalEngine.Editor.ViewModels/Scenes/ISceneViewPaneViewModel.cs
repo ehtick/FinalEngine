@@ -5,11 +5,12 @@
 namespace FinalEngine.Editor.ViewModels.Scenes;
 
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
 using FinalEngine.Editor.ViewModels.Docking.Panes;
 
 public interface ISceneViewPaneViewModel : IPaneViewModel
 {
-    ICommand RenderCommand { get; }
+    ICommand LoadCommand { get; }
 
-    ICommand ResizeCommand { get; }
+    IRelayCommand RenderCommand { get; }
 }

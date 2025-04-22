@@ -54,6 +54,8 @@ public sealed class PerspectiveRenderEntitySystem : EntitySystemBase
         {
             this.renderEffectQueue.Enqueue(ToneMappingRenderEffect.Instance);
             this.renderEffectQueue.Enqueue(InversionRenderEffect.Instance);
+            this.renderEffectQueue.Enqueue(FogRenderEffect.Instance);
+            this.renderEffectQueue.Enqueue(GammaCorrectionRenderEffect.Instance);
 
             var transform = entity.GetComponent<TransformComponent>();
             var perspective = entity.GetComponent<PerspectiveComponent>();

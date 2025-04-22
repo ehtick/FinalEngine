@@ -11,6 +11,7 @@ using FinalEngine.Audio.OpenAL.Extensions;
 using FinalEngine.ECS.Extensions;
 using FinalEngine.Editor.Common.Extensions;
 using FinalEngine.Editor.Desktop.Extensions;
+using FinalEngine.Editor.Desktop.Input;
 using FinalEngine.Editor.Desktop.Services.Actions;
 using FinalEngine.Editor.Desktop.Services.Layout;
 using FinalEngine.Editor.Desktop.Views;
@@ -28,6 +29,7 @@ using FinalEngine.Editor.ViewModels.Scenes;
 using FinalEngine.Editor.ViewModels.Services;
 using FinalEngine.Editor.ViewModels.Services.Actions;
 using FinalEngine.Editor.ViewModels.Services.Entities;
+using FinalEngine.Editor.ViewModels.Services.Gizmos;
 using FinalEngine.Editor.ViewModels.Services.Interactions;
 using FinalEngine.Editor.ViewModels.Services.Layout;
 using FinalEngine.Input.Extensions;
@@ -117,6 +119,7 @@ public partial class App : Application
 
         services.AddSingleton<IUserActionRequester, UserActionRequester>();
         services.AddSingleton<ILayoutManager, LayoutManager>();
+        services.AddSingleton<IGizmoController, ImGuiController>();
 
         services.AddSingleton<IViewPresenter>(x =>
         {
