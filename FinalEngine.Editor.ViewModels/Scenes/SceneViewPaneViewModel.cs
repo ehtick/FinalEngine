@@ -118,9 +118,6 @@ public sealed class SceneViewPaneViewModel : PaneViewModelBase, ISceneViewPaneVi
         this.sceneManager.Update();
         this.sceneManager.Render();
 
-        DebugUI.RenderFogWindow();
-        DebugUI.RenderGammaWindow();
-
         if (this.selectedEntity != null)
         {
             ImGuizmo.BeginFrame();
