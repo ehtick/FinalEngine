@@ -49,8 +49,8 @@ public sealed class GameTime : IGameTime
 
         if (currentTime >= this.lastTime + this.waitTime)
         {
-            Delta = (float)(currentTime - this.lastTime);
-            FrameRate = (float)Math.Round(OneSecondAsMilliSeconds / Delta);
+            Delta = (float)((float)(currentTime - this.lastTime) / OneSecondAsMilliSeconds);
+            FrameRate = (float)((float)Math.Round(OneSecondAsMilliSeconds / Delta) * OneSecondAsMilliSeconds);
 
             this.lastTime = currentTime;
 

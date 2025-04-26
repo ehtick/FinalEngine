@@ -121,10 +121,4 @@ vec3 CalculateAmbientLight(AmbientLight light, Material material, vec2 texCoord)
     return light.base.color * light.base.intensity * texture(material.diffuseTexture, texCoord).rgb;
 }
 
-vec3 CalculateNormal(mat3 tbnMatrix, sampler2D normalTexture, vec2 texCoord)
-{
-    // Take the TBN matrix and transform the normal to world space.
-    return normalize(tbnMatrix * (2.0 * texture(normalTexture, texCoord).rgb - 1.0));
-}
-
 #endif // LIGHTING_GLSL
